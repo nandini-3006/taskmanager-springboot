@@ -1,5 +1,6 @@
 package com.scaler.taskmanager.controller;
 
+import com.scaler.taskmanager.DTO.UpdateTaskDTO;
 import com.scaler.taskmanager.entities.TaskEntity;
 import com.scaler.taskmanager.service.TaskService;
 import com.scaler.taskmanager.DTO.CreateTaskDTO;
@@ -42,4 +43,17 @@ public class TaskController {
             return ResponseEntity.badRequest().build(); // You can return a message if needed
         }
     }
+    @PatchMapping("/{id}")
+    public ResponseEntity<TaskEntity> updateTask(@PathVariable("id") Integer id, @RequestBody UpdateTaskDTO body) {
+        try {
+            var task = taskService.updateTask(id, body.getDescription(), body.getDeadline(), body.getCompleted());
+            if (task == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(task);
+        } catch (ParseException e) {
+            return ResponseEntity.badRequest().body(null); // Optional: add message
+        }
+    }
+
 }
